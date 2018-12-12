@@ -1,1 +1,1 @@
-# UGRID-Reader-for-ParaView
+# UGRID Reader Plugin for ParaView 
