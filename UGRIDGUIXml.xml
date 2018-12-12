@@ -1,0 +1,6 @@
+<ParaViewReaders>
+  <Reader name="UGRIDSeriesReader"
+          extensions="nc ncdf"
+          file_description="Read unstructured grid files in NetCDF format" >
+  </Reader>
+</ParaViewReaders>

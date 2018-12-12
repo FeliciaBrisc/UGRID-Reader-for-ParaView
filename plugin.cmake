@@ -1,0 +1,4 @@
+pv_plugin(UGRIDReader
+  DESCRIPTION "UGRIDReader"
+  DEFAULT_ENABLED
+)

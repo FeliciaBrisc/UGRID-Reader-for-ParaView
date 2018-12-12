@@ -1,0 +1,161 @@
+<ServerManagerConfiguration>
+
+  <ProxyGroup name="internal_sources">
+    <!-- Begin UGRIDReader -->
+    <SourceProxy name="UGRIDReader" class="UGRIDReader" label="UGRIDReader">
+
+      <Documentation long_help="Read an unstructured grid file in NetCDF format."
+                     short_help="Read a UGRID file.">
+        UHH UGRID Reader
+      </Documentation>
+
+
+      <StringVectorProperty name="FileName"
+                            animateable="0"
+                            command="SetFileName"
+                            number_of_elements="1">
+        <FileListDomain name="files"/>
+        <Documentation>
+          This property specifies the file name for the UGRID reader.
+        </Documentation>
+      </StringVectorProperty>
+
+
+      <DoubleVectorProperty information_only="1"
+                            name="TimestepValues"
+                            repeatable="1">
+        <TimeStepsInformationHelper />
+        <Documentation>
+          Available timestep values.
+        </Documentation>
+      </DoubleVectorProperty>
+
+
+      <StringVectorProperty information_only="1"
+                            name="CellArrayInfo">
+        <ArraySelectionInformationHelper attribute_name="Cell" />
+      </StringVectorProperty>
+
+
+      <StringVectorProperty command="SetCellArrayStatus"
+                            element_types="2 0"
+                            information_property="CellArrayInfo"
+                            label="Cell Arrays"
+                            name="CellArrayStatus"
+                            number_of_elements="0"
+                            number_of_elements_per_command="2"
+                            repeat_command="1">
+        <ArraySelectionDomain name="array_list">
+          <RequiredProperties>
+            <Property function="ArrayList"
+                      name="CellArrayInfo" />
+          </RequiredProperties>
+        </ArraySelectionDomain>
+        <Documentation>
+          This property lists which cell-centered arrays to read.
+        </Documentation>
+      </StringVectorProperty>
+
+
+      <StringVectorProperty information_only="1"
+                            name="PointArrayInfo">
+        <ArraySelectionInformationHelper attribute_name="Point" />
+      </StringVectorProperty>
+
+
+      <StringVectorProperty name="PointArrayStatus"
+                            command="SetPointArrayStatus"
+                            number_of_elements="0"
+                            repeat_command="1"
+                            number_of_elements_per_command="2"
+                            element_types="2 0"
+                            information_property="PointArrayInfo"
+                            label="Point Arrays">
+        <ArraySelectionDomain name="array_list">
+          <RequiredProperties>
+            <Property name="PointArrayInfo"
+                      function="ArrayList"/>
+          </RequiredProperties>
+        </ArraySelectionDomain>
+        <Documentation>
+          This property lists which point-centered arrays to read.
+        </Documentation>
+      </StringVectorProperty>
+
+
+      <Hints>
+        <ReaderFactory extensions="nc ncdf"
+                       file_description="UGRID NetCDF (Unstructured)" />
+      </Hints>
+    </SourceProxy>
+    <!-- End UGRIDReader -->
+  </ProxyGroup>
+
+
+  <ProxyGroup name="sources">
+    <!-- Begin UGRIDSeriesReader -->
+    <SourceProxy name="UGRIDSeriesReader"
+                 class="vtkFileSeriesReader"
+                 label="UGRIDReader"
+                 si_class="vtkSIMetaReaderProxy"
+                 file_name_method="SetFileName">
+      <Documentation short_help="Read an unstructured dataset in NetCDF format."
+                     long_help="Read files stored in NetCDF format.">
+        The UGRID reader supports time series
+      </Documentation>
+
+      <Hints>
+        <ReaderFactory extensions="nc ncdf"
+                       file_description="UGRID NetCDF Reader (Plugin)" />
+      </Hints>
+
+      <SubProxy>
+        <Proxy name="Reader"
+               proxygroup="internal_sources"
+               proxyname="UGRIDReader">
+        </Proxy>
+        <ExposedProperties>
+          <Property name="CellArrayInfo" />
+          <Property name="CellArrayStatus" />
+          <Property name="PointArrayInfo" />
+          <Property name="PointArrayStatus" />
+        </ExposedProperties>
+      </SubProxy>
+
+
+      <StringVectorProperty name="FileNameInfo"
+                            command="GetCurrentFileName"
+                            information_only="1" >
+        <SimpleStringInformationHelper />
+      </StringVectorProperty>
+
+
+      <StringVectorProperty name="FileNames"
+                            clean_command="RemoveAllFileNames"
+                            command="AddFileName"
+                            animateable="0"
+                            number_of_elements="0"
+                            repeat_command="1"
+                            information_property="FileNameInfo">
+        <FileListDomain name="files" />
+        <Documentation>
+          The list of files to be read by the reader. If more than 1 file is
+          specified, the reader will switch to file series mode in which it will
+          pretend that it can support time and provide 1 file per time step.
+        </Documentation>
+      </StringVectorProperty>
+
+
+      <DoubleVectorProperty name="TimestepValues"
+                            repeatable="1"
+                            information_only="1">
+        <TimeStepsInformationHelper/>
+        <Documentation>
+          Available time step values.
+        </Documentation>
+      </DoubleVectorProperty>
+      <!-- End of UGRIDSeriesReader -->
+    </SourceProxy>
+  </ProxyGroup>
+
+</ServerManagerConfiguration>
